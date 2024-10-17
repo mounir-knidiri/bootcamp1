@@ -38,3 +38,6 @@ jobs:
     #deploy app in surge 
     - name: Run Surge
       run: surge ./ bootcamp1-test1.surge.sh --token ${{secrets.SURGE_TOKEN }}  
+
+    - run: npm ci
+    - run: npm test
