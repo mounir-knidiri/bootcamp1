@@ -1,0 +1,45 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Deploy Website - Node.js CI
+
+ # when somebody push to master do :
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+#workflow is made of one or more jobs
+jobs:
+
+          
+jobs:
+  #this workflow contains a single job called "build"
+  build:
+    #create a virtual machine in github server .. and deployed  
+    runs-on: ubuntu-latest
+
+    #strategy:
+      #matrix:
+        #node-version: [18.x, 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        
+    #steps represent a sequence of steps that will  be executed 
+    steps:
+    #Check-out your repository under $GITHUB_WORSPACE 
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with: 
+        node-version: ${{ matrix.node-version }}
+         
+        
+    - name: Install Surge
+      run: npm install -g surge
+      
+    #deploy app in surge 
+    - name: Run Surge
+      run: surge ./ bootcamp1-test1.surge.sh --token ${{secrets.SURGE_TOKEN }}  
+
+    - run: npm ci
+    - run: npm test
